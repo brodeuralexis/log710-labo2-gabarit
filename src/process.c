@@ -13,7 +13,7 @@ void process_init_from_line(process_t* process, const char* line, size_t line_nu
     assert(line_number > 0);
 
     process->pid = line_number;
-    process->status = UNSCHEDULED;
+    process->status = NEW;
     process->executed_time = 0;
     process->waited_time = 0;
 
@@ -32,51 +32,51 @@ void process_init_from_line(process_t* process, const char* line, size_t line_nu
     process->type = process_type;
 }
 
-void process_schedule(process_t* process)
+void process_set_ready(process_t* process)
 {
     assert(process != NULL);
-    assert(process->status == UNSCHEDULED);
+    assert(process->status == NEW);
 
-    process->status = SCHEDULED;
+    process->status = READY;
 }
 
 void process_start(process_t* process)
 {
     assert(process != NULL);
-    assert(process->status == SCHEDULED);
+    assert(process->status == READY);
     assert(current_process == NULL);
 
-    process->status = STARTED;
+    process->status = RUNNING;
     current_process = process;
 }
 
 void process_stop(process_t* process)
 {
     assert(process != NULL);
-    assert(process->status == STARTED);
+    assert(process->status == RUNNING);
     assert(process == current_process);
 
-    process->status = STOPPED;
+    process->status = TERMINATED;
     current_process = NULL;
 }
 
 void process_suspend(process_t* process)
 {
     assert(process != NULL);
-    assert(process->status == STARTED);
+    assert(process->status == RUNNING);
     assert(process == current_process);
 
-    process->status = SUSPENDED;
+    process->status = WAITING;
     current_process = NULL;
 }
 
 void process_resume(process_t* process)
 {
     assert(process != NULL);
-    assert(process->status == SUSPENDED);
+    assert(process->status == WAITING);
     assert(current_process == NULL);
 
-    process->status = STARTED;
+    process->status = RUNNING;
     current_process = process;
 }
 
@@ -142,11 +142,11 @@ void process_tick(process_t* process)
 
     switch (process->status)
     {
-        case SCHEDULED:
-        case SUSPENDED:
+        case READY:
+        case WAITING:
             process->waited_time++;
             break;
-        case STARTED:
+        case RUNNING:
             process->executed_time++;
 
             char* colour = COLOURS[process->pid % NUM_COLOURS];
@@ -159,8 +159,8 @@ void process_tick(process_t* process)
             }
 
             break;
-        case UNSCHEDULED:
-        case STOPPED:
+        case NEW:
+        case TERMINATED:
             break;
     }
 }

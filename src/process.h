@@ -16,23 +16,23 @@ typedef enum process_status
      * @brief Le processus n'a pas été envoyé à l'ordonnanceur.
      * @note Le processus n'est pas arrivé.
      */
-    UNSCHEDULED,
+    NEW,
     /**
      * @brief Le processus a été envoyé à l'ordonnanceur.
      */
-    SCHEDULED,
+    READY,
     /**
      * @brief Le processus a été démarré par l'ordonnanceur.
      */
-    STARTED,
+    RUNNING,
     /**
      * @brief Le processus a terminé de s'exécuter.
      */
-    STOPPED,
+    TERMINATED,
     /**
      * @brief Le processus a été suspendu par l'ordonnanceur.
      */
-    SUSPENDED,
+    WAITING,
 } process_status_t;
 
 /**
@@ -63,7 +63,7 @@ typedef struct process
     size_t pid;
     /**
      * @brief La status du processus.
-     * @note La processus est @e UNSCHEDULED par défaut.
+     * @note La processus est @e NEW par défaut.
      */
     process_status_t status;
     /**
@@ -111,16 +111,16 @@ typedef struct process
 void process_init_from_line(process_t* process, const char* line, size_t line_number);
 
 /**
- * @brief Change le status du processus à @e SCHEDULED.
- * @note Le processus doit être @e UNSCHEDULED.
+ * @brief Change le status du processus à @e READY.
+ * @note Le processus doit être @e NEW.
  *
  * @param process Le processus
  */
 void process_schedule(process_t* process);
 
 /**
- * @brief Change le status du processus à @e STARTED.
- * @note Le processus doit être @e SCHEDULED.
+ * @brief Change le status du processus à @e RUNNING.
+ * @note Le processus doit être @e READY.
  * @note Il ne doit pas y avoir de processus en cours d'exécution.
  *
  * @param process Le processus
@@ -128,8 +128,8 @@ void process_schedule(process_t* process);
 void process_start(process_t* process);
 
 /**
- * @brief Change le status du processs à @e SUSPENDED.
- * @note Le processus doit être @e STARTED.
+ * @brief Change le status du processs à @e WAITING.
+ * @note Le processus doit être @e RUNNING.
  * @note Le processus doit être le processus courant.
  *
  * @param process Le processus
@@ -137,8 +137,8 @@ void process_start(process_t* process);
 void process_suspend(process_t* process);
 
 /**
- * @brief Change le status du processus à @e STARTED.
- * @note Le processus doit être @e SUSPENDED.
+ * @brief Change le status du processus à @e RUNNING.
+ * @note Le processus doit être @e WAITING.
  * @note Il ne doit pas y avoir de processus en cours d'exécution.
  *
  * @param process

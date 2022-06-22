@@ -58,7 +58,7 @@ static void print_each_process(process_t* process, void* userdata)
 
     switch (process->status)
     {
-    case SCHEDULED:
+    case READY:
         if (process->type == REAL)
         {
             printf("^%zu, ", process->pid);
@@ -73,7 +73,7 @@ static void print_each_process(process_t* process, void* userdata)
         }
 
         break;
-    case SUSPENDED:
+    case WAITING:
         printf("*%zu, ", process->pid);
         break;
     default:

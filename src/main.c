@@ -94,7 +94,7 @@ int main(int argc, char** argv)
         {
             if (process->arrival_time == current_tick)
             {
-                process_schedule(process);
+                process_set_ready(process);
 
                 err = scheduler_schedule(&scheduler, process);
                 if (err != 0)
