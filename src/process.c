@@ -1,0 +1,166 @@
+#include "process.h"
+
+#include <assert.h>
+#include <stddef.h>
+#include <stdio.h>
+
+static process_t* current_process = NULL;
+
+void process_init_from_line(process_t* process, const char* line, size_t line_number)
+{
+    assert(process != NULL);
+    assert(line != NULL);
+    assert(line_number > 0);
+
+    process->pid = line_number;
+    process->status = UNSCHEDULED;
+    process->executed_time = 0;
+    process->waited_time = 0;
+
+    int process_type;
+
+    assert(sscanf(line, "%zu, %d, %zu, %zu, %zu, %zu, %zu",
+        &process->arrival_time,
+        &process_type,
+        &process->execution_time,
+        &process->resources.printers,
+        &process->resources.scanners,
+        &process->resources.modems,
+        &process->resources.drives
+    ) == 7);
+
+    process->type = process_type;
+}
+
+void process_schedule(process_t* process)
+{
+    assert(process != NULL);
+    assert(process->status == UNSCHEDULED);
+
+    process->status = SCHEDULED;
+}
+
+void process_start(process_t* process)
+{
+    assert(process != NULL);
+    assert(process->status == SCHEDULED);
+    assert(current_process == NULL);
+
+    process->status = STARTED;
+    current_process = process;
+}
+
+void process_stop(process_t* process)
+{
+    assert(process != NULL);
+    assert(process->status == STARTED);
+    assert(process == current_process);
+
+    process->status = STOPPED;
+    current_process = NULL;
+}
+
+void process_suspend(process_t* process)
+{
+    assert(process != NULL);
+    assert(process->status == STARTED);
+    assert(process == current_process);
+
+    process->status = SUSPENDED;
+    current_process = NULL;
+}
+
+void process_resume(process_t* process)
+{
+    assert(process != NULL);
+    assert(process->status == SUSPENDED);
+    assert(current_process == NULL);
+
+    process->status = STARTED;
+    current_process = process;
+}
+
+#define BLACK   "\033[30m"
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+#define BLUE    "\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN    "\033[36m"
+#define WHITE   "\033[37m"
+
+#define ON_BLACK   "\033[40m"
+#define ON_RED     "\033[41m"
+#define ON_GREEN   "\033[42m"
+#define ON_YELLOW  "\033[43m"
+#define ON_BLUE    "\033[44m"
+#define ON_MAGENTA "\033[45m"
+#define ON_CYAN    "\033[46m"
+#define ON_WHITE   "\033[47m"
+
+#define NORMAL      "\033[0m"
+
+#define NUM_COLOURS 32
+static char* COLOURS [NUM_COLOURS] = {
+    BLACK ON_WHITE,
+    CYAN ON_RED,
+    GREEN ON_MAGENTA,
+    BLUE ON_YELLOW,
+    BLACK ON_CYAN,
+    WHITE ON_RED,
+    BLUE ON_GREEN,
+    YELLOW ON_MAGENTA,
+    BLACK ON_GREEN,
+    YELLOW ON_RED,
+    BLUE ON_CYAN,
+    MAGENTA ON_WHITE,
+    BLACK ON_YELLOW,
+    GREEN ON_RED,
+    BLUE ON_WHITE,
+    CYAN ON_MAGENTA,
+    WHITE ON_BLACK,
+    RED ON_CYAN,
+    MAGENTA ON_GREEN,
+    YELLOW ON_BLUE,
+    CYAN ON_BLACK,
+    RED ON_WHITE,
+    GREEN ON_BLUE,
+    MAGENTA ON_YELLOW,
+    GREEN ON_BLACK,
+    RED ON_YELLOW,
+    CYAN ON_BLUE,
+    WHITE ON_MAGENTA,
+    YELLOW ON_BLACK,
+    RED ON_GREEN,
+    WHITE ON_BLUE,
+    MAGENTA ON_CYAN
+};
+
+void process_tick(process_t* process)
+{
+    assert(process != NULL);
+
+    switch (process->status)
+    {
+        case SCHEDULED:
+        case SUSPENDED:
+            process->waited_time++;
+            break;
+        case STARTED:
+            process->executed_time++;
+
+            char* colour = COLOURS[process->pid % NUM_COLOURS];
+
+            printf("%sP%zu:        tick %zu / %zu" BLACK NORMAL "\n", colour, process->pid, process->executed_time, process->execution_time);
+
+            if (process->executed_time >= process->execution_time)
+            {
+                process_stop(process);
+            }
+
+            break;
+        case UNSCHEDULED:
+        case STOPPED:
+            break;
+    }
+}
