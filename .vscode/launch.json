@@ -15,6 +15,7 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
+            "miDebuggerArgs": "-x ${workspaceFolder}/src/visualizer.py",
             "preLaunchTask": "[make] Log710Schedulers",
             "setupCommands": [
                 {
@@ -35,6 +36,7 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
+            "miDebuggerArgs": "-x ${workspaceFolder}/src/visualizer.py",
             "preLaunchTask": "[make] Log710Schedulers",
             "setupCommands": [
                 {
@@ -55,6 +57,7 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
+            "miDebuggerArgs": "-x ${workspaceFolder}/src/visualizer.py",
             "preLaunchTask": "[make] Log710Schedulers",
             "setupCommands": [
                 {
@@ -75,6 +78,7 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
+            "miDebuggerArgs": "-x ${workspaceFolder}/src/visualizer.py",
             "preLaunchTask": "[make] Log710Schedulers",
             "setupCommands": [
                 {
@@ -95,6 +99,7 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
+            "miDebuggerArgs": "-x ${workspaceFolder}/src/visualizer.py",
             "preLaunchTask": "[make] Log710Schedulers",
             "setupCommands": [
                 {
@@ -115,6 +120,7 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
+            "miDebuggerArgs": "-x ${workspaceFolder}/src/visualizer.py",
             "preLaunchTask": "[make] Log710Schedulers",
             "setupCommands": [
                 {
@@ -135,6 +141,7 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
+            "miDebuggerArgs": "-x ${workspaceFolder}/src/visualizer.py",
             "preLaunchTask": "[make] Log710Schedulers",
             "setupCommands": [
                 {
@@ -155,6 +162,7 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
+            "miDebuggerArgs": "-x ${workspaceFolder}/src/visualizer.py",
             "preLaunchTask": "[make] Log710Schedulers",
             "setupCommands": [
                 {
@@ -175,6 +183,7 @@
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
+            "miDebuggerArgs": "-x ${workspaceFolder}/src/visualizer.py",
             "preLaunchTask": "[make] Log710Schedulers",
             "setupCommands": [
                 {
